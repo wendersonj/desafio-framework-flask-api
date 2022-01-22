@@ -3,27 +3,25 @@ from typing import List
 import logging
 import requests
 from flask import Flask
-from pydantic import parse_obj_as, root_validator
+from pydantic import parse_obj_as
 
-from projeto.utils.camel_model import CamelModel
+from projeto.models.todo import ToDoList, ToDo
 
 app = Flask("Desafio Python - Framework")
 
 
-class ToDo(CamelModel):
-    id: int
-    user_id: str
-    title: str
-    completed: bool
-
-    @root_validator()
-    def test(cls, values):
-        # print(values)
-        return values
+class SuccessMessage:
+    pass
 
 
-class ToDoList(CamelModel):
-    todo_list: List[ToDo]
+class ErrorMessage:
+    error: str
+    reason: str
+
+    def __repr__(self):
+        return {
+
+        }
 
 
 @app.route('/get_first_five_todo')
@@ -35,7 +33,8 @@ def get_first_five_todo():
     if response.status_code in (200, 201):
         list_of_items = ToDoList(todo_list=parse_obj_as(List[ToDo], response.json()[:5]))
         to_be_return = list_of_items.json(exclude={'todo_list': {'__all__': {'completed': True, 'user_id': True}}})
-        logging.info(f"/get_first_five_todo : response content from API: {to_be_return}. status code {response.status_code}")
+        logging.info(
+            f"/get_first_five_todo : response content from API: {to_be_return}. status code {response.status_code}")
 
         return to_be_return
 
@@ -48,5 +47,6 @@ def get_first_five_todo():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='api.log', level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+    logging.basicConfig(filename='api.log', level=logging.DEBUG,
+                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
     app.run()
