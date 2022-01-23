@@ -2,12 +2,12 @@ from typing import List
 
 import logging
 import requests
-from flask import Flask, Response, make_response, jsonify
+from flask import Flask, Response, jsonify
 from flask_basicauth import BasicAuth
 from pydantic import parse_obj_as
 
-from projeto.models.todo import ToDoList, ToDo
-from projeto.utils.camel_model import CamelModel
+from models.todo import ToDoList, ToDo
+from utils.camel_model import CamelModel
 
 app = Flask("Desafio Python - Framework")
 app.debug = True
