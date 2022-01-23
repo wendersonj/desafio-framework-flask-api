@@ -23,7 +23,7 @@ def get_first_five_todo():
     response_placeholder = requests.get('https://jsonplaceholder.typicode.com/todos')
     # verificar se recebeu uma resposta 200. senão, levanta exceção de servidor do request está com problemas e tente novamente.
 
-    if response_placeholder.status_code in (5, 6):
+    if response_placeholder.status_code in (200, 201):
         list_of_items = ToDoList(todo_list=parse_obj_as(List[ToDo], response_placeholder.json()[:5]))
         todo_list = list_of_items.json(exclude={'todo_list': {'__all__': {'completed': True, 'user_id': True}}})
 
