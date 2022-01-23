@@ -62,6 +62,22 @@ def log_response_content(route, response, logger_with_level):
     logger_with_level(f'{route}: raw response content from API: {response.json}. status code {response.status_code}')
 
 
+@app.route('/')
+def base_page():
+    return jsonify('Welcome to Desafio Framework')
+
+
+@app.route('/invalid_service')
+def invalid_service_error():
+    error = Error()
+    error.error.reason = "Esta rota de serviço não está disponível."
+    response = Response(error.json(), content_type="application/json; charset=utf-8", status=503)
+
+    log_response_content('/invalid_service_error', response, logging.info)
+
+    return response
+
+
 if __name__ == "__main__":
     logging.basicConfig(filename='api.log', level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - [%(levelname)s] -  %(message)s')
