@@ -2,7 +2,8 @@ from typing import List
 
 import logging
 import requests
-from flask import Flask, Response, make_response
+from flask import Flask, Response, make_response, jsonify
+from flask_basicauth import BasicAuth
 from pydantic import parse_obj_as
 
 from projeto.models.todo import ToDoList, ToDo
@@ -10,14 +11,23 @@ from projeto.utils.camel_model import CamelModel
 
 app = Flask("Desafio Python - Framework")
 app.debug = True
+app.config['BASIC_AUTH_USERNAME'] = 'framework'
+app.config['BASIC_AUTH_PASSWORD'] = 'desafio'
+app.config['BASIC_AUTH_FORCE'] = True
+
+basic_auth = BasicAuth(app)
 
 
-class ErrorMessage(CamelModel):
-    error: str
-    reason: str
+class ErrorContent(CamelModel):
+    reason: str = ""
+
+
+class Error(CamelModel):
+    error: ErrorContent = ErrorContent()
 
 
 @app.route('/get_first_five_todo')
+@basic_auth.required
 def get_first_five_todo():
     logging.info(f"/get_first_five_todo was requested")
     response_placeholder = requests.get('https://jsonplaceholder.typicode.com/todos')
@@ -39,9 +49,8 @@ def get_first_five_todo():
             f"/get_first_five_todo : invalid response from placeholder.typicode with "
             f"status code {response_placeholder.status_code}")
 
-        error = ErrorMessage(error="Serviço indisponível",
-                             reason="Não foi possível completar sua requisição. Tente novamente.")
-
+        error = Error()
+        error.error.reason = "Não foi possível completar sua requisição. Serviço indisponível. Tente novamente."
         response = Response(error.json(), content_type="application/json; charset=utf-8", status=503)
 
         log_response_content('/get_first_five_todo', response, logging.info)
@@ -50,7 +59,7 @@ def get_first_five_todo():
 
 
 def log_response_content(route, response, logger_with_level):
-    logger_with_level(f'{route}: raw response content from API: {response}. status code {response.status_code}')
+    logger_with_level(f'{route}: raw response content from API: {response.json}. status code {response.status_code}')
 
 
 if __name__ == "__main__":
