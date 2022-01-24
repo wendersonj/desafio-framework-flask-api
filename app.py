@@ -68,6 +68,7 @@ def base_page():
 
 
 @app.route('/invalid_service')
+@basic_auth.required
 def invalid_service_error():
     error = Error()
     error.error.reason = "Esta rota de serviço não está disponível."
