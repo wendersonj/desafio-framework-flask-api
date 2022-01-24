@@ -41,6 +41,50 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Checar resposta de serviço inválido (sem autorização) Copy",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Checar resposta de serviço inválido (com autorização)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "desafio",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "framework",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/invalid_service",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"invalid_service"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
