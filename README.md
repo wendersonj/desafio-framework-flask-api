@@ -39,3 +39,8 @@ $ python app.py
 ``` 
 docker image build -t docker-desafio-framework -f ./docker/Dockerfile .
 ```
+
+# Postman
+
+Está disnibilizado no repositório um arquivo de coleção para o postman (Desafio Framework.postman_collection.json) que
+pode ser importado e utilizado para realizar os acessos a aplicação
